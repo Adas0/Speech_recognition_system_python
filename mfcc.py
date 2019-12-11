@@ -3,6 +3,7 @@
 
 # https://medium.com/@jonathan_hui/speech-recognition-feature-extraction-mfcc-plp-5455f5a69dd9
 # http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
+# https://python-speech-features.readthedocs.io/en/latest/
 
 ##########################################################################################
 
@@ -58,6 +59,7 @@ def getMFCC():
                                             preemph=preemph, ceplifter=lifter,
                                             appendEnergy=log_or_not, winfunc=window)
     return MFCC
+
 
 def function():
     pass
