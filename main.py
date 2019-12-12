@@ -1,12 +1,8 @@
-import os
-import numpy as np
+
 import scipy.signal as sig
 from scipy.io import wavfile
 import scipy.fftpack as fft
-from scipy.signal import get_window
-# import IPython.display as ipd
 import matplotlib.pyplot as plt
-
 import numpy as np
 
 
@@ -16,9 +12,9 @@ project_path = 'C:/Users/Adam/PycharmProjects/interfejs_glosowy_projekt/'
 sample_rate, audio = wavfile.read(project_path + "jeden_16bit.wav")
 
 
-def normalize_signal(audio):
-    audio = audio / np.max(np.abs(audio))
-    return audio
+def normalize_signal(audio_):
+    audio_ = audio_ / np.max(np.abs(audio))
+    return audio_
 
 
 def frame_and_window_signal(signal, frame_size=0.02):
@@ -60,7 +56,7 @@ def window_frames(frames):
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal)
+    FFT = fft.fft(signal, 512)
     FFT = FFT[:len(FFT) // 2]
     return FFT
 
@@ -118,3 +114,52 @@ def trigger_plots():
 
 
 trigger_plots()
+
+
+# ta funkcja poprawnie przelicza, potwierdzone
+def freq_to_mel(freq):
+    return 1125 * np.log(1 + freq/700)
+
+
+def mel_to_freq(mel_freqs):
+    freqs = list()
+    for i in range(len(mel_freqs)):
+        freqs.append(700 * (np.exp(mel_freqs[i]/1125)-1))
+    return freqs
+
+
+def round_freqs(freqs):
+    rounded_freqs = list()
+    nfft = 0.02 + sample_rate
+    for el in freqs:
+        rounded_freqs.append(np.floor((512 + 1) * el/sample_rate))
+
+    return rounded_freqs
+
+
+def calculate_filter_middle_freqs():
+    low_freq = 80
+    high_freq = 4000
+    low_mel_freq = freq_to_mel(low_freq)
+    high_mel_freq = freq_to_mel(high_freq)
+    freqs = list()
+    mel_freqs_difference = high_mel_freq - low_mel_freq
+    mel_freqs_step = mel_freqs_difference/14
+
+    for el in range(1, 15):
+        freqs.append(low_mel_freq + el*mel_freqs_step)
+
+    freqs = mel_to_freq(freqs)
+    freqs = round_freqs(freqs)
+
+    return freqs
+
+
+# def get_mel_filters():
+#     middle_freqs = calculate_filter_middle_freqs()
+#     filters = list()
+#     numer_of_filters = 14
+#     for i in range(0, )
+
+# print(freq_to_mel(300), freq_to_mel(8000))
+
