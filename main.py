@@ -5,11 +5,8 @@ import scipy.fftpack as fft
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-project_path = 'C:/Users/Adam/PycharmProjects/interfejs_glosowy_projekt/'
-
 # audio read
-sample_rate, audio = wavfile.read(project_path + "jeden_16bit.wav")
+sample_rate, audio = wavfile.read("./jeden_16bit.wav")
 
 
 def normalize_signal(audio_):
@@ -137,16 +134,14 @@ def round_freqs(freqs):
     return rounded_freqs
 
 
-def calculate_filter_middle_freqs():
-    low_freq = 80
-    high_freq = 4000
+def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
     low_mel_freq = freq_to_mel(low_freq)
     high_mel_freq = freq_to_mel(high_freq)
     freqs = list()
     mel_freqs_difference = high_mel_freq - low_mel_freq
-    mel_freqs_step = mel_freqs_difference/14
+    mel_freqs_step = mel_freqs_difference/filters_number
 
-    for el in range(1, 15):
+    for el in range(1, filters_number + 1):
         freqs.append(low_mel_freq + el*mel_freqs_step)
 
     freqs = mel_to_freq(freqs)
@@ -155,11 +150,30 @@ def calculate_filter_middle_freqs():
     return freqs
 
 
-# def get_mel_filters():
-#     middle_freqs = calculate_filter_middle_freqs()
-#     filters = list()
-#     numer_of_filters = 14
-#     for i in range(0, )
+def generate_filter_bank():
+    low_freq = 80
+    high_freq = 4000
+    filters_number = 16
 
-# print(freq_to_mel(300), freq_to_mel(8000))
+    middle_freqs = calculate_filter_middle_freqs(low_freq, high_freq, filters_number)
 
+    fbank = np.zeros((filters_number, int(np.floor(512 / 2 + 1))))
+    for m in range(1, filters_number - 1):
+        f_m_minus = int(middle_freqs[m - 1])
+        f_m = int(middle_freqs[m])
+        f_m_plus = int(middle_freqs[m + 1])
+
+        for k in range(f_m_minus, f_m):
+            fbank[m - 1, k] = (k - middle_freqs[m - 1]) / (middle_freqs[m] - middle_freqs[m - 1])
+        for k in range(f_m, f_m_plus):
+            fbank[m - 1, k] = (middle_freqs[m + 1] - k) / (middle_freqs[m + 1] - middle_freqs[m])
+
+    return fbank
+
+def show_bank():
+    fbank = generate_filter_bank()
+    plt.figure(4)
+    plt.plot(fbank.T)
+    plt.show()
+
+show_bank()
