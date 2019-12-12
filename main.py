@@ -65,8 +65,8 @@ def showFFT(signal):
 
 
 def high_pass_filter(signal):
-    b, a = sig.butter(6, 0.4, 'high', analog=True)
-    [W, h] = sig.freqz(b, a, worN=1024)
+    b, a = sig.butter(5, 0.65, 'high', analog=True)
+    [W, h] = sig.freqz(b, a, worN=512)
     W = sample_rate * W / 2 * np.pi
     filtered_signal = sig.lfilter(b, a, signal)
     return filtered_signal
@@ -95,9 +95,9 @@ def trigger_plots():
     plt.figure(2)
     plt.subplot(2, 1, 1)
     plt.title("FFT of unfiltered vs filtered signal")
-    plt.plot(getFFT(audio))
+    plt.plot(np.abs(getFFT(audio)))
     plt.subplot(2, 1, 2)
-    plt.plot(getFFT(filtered_audio))
+    plt.plot(np.abs(getFFT(filtered_audio)))
     plt.show()
 
     # sygnal po filtracji vs sygnal po filtracji zramkoway i zokienkowany
@@ -141,38 +141,45 @@ def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
     mel_freqs_difference = high_mel_freq - low_mel_freq
     mel_freqs_step = mel_freqs_difference/filters_number
 
-    for el in range(1, filters_number + 1):
-        freqs.append(low_mel_freq + el*mel_freqs_step)
+    for el in range(0, filters_number + 1):
+        freqs.append(low_mel_freq + el * mel_freqs_step)
 
     freqs = mel_to_freq(freqs)
-    freqs = round_freqs(freqs)
-
+    # freqs = np.floor(freqs)
+    # freqs = round_freqs(freqs)
+    print(freqs)
     return freqs
 
 
 def generate_filter_bank():
     low_freq = 80
     high_freq = 4000
-    filters_number = 16
+    filters_number = 14
 
     middle_freqs = calculate_filter_middle_freqs(low_freq, high_freq, filters_number)
 
-    fbank = np.zeros((filters_number, int(np.floor(512 / 2 + 1))))
-    for m in range(1, filters_number - 1):
-        f_m_minus = int(middle_freqs[m - 1])
+    fbank = np.zeros((filters_number, int(np.floor(4000 + 1))))
+    for m in range(1, filters_number + 1):
+        if m > 0:
+            f_m_minus = int(middle_freqs[m - 1])
         f_m = int(middle_freqs[m])
-        f_m_plus = int(middle_freqs[m + 1])
+        if m < filters_number:
+            f_m_plus = int(middle_freqs[m + 1])
 
         for k in range(f_m_minus, f_m):
             fbank[m - 1, k] = (k - middle_freqs[m - 1]) / (middle_freqs[m] - middle_freqs[m - 1])
+
         for k in range(f_m, f_m_plus):
             fbank[m - 1, k] = (middle_freqs[m + 1] - k) / (middle_freqs[m + 1] - middle_freqs[m])
 
+    print(fbank.shape)
     return fbank
+
 
 def show_bank():
     fbank = generate_filter_bank()
     plt.figure(4)
+    plt.title("Mel filter bank")
     plt.plot(fbank.T)
     plt.show()
 
