@@ -8,6 +8,8 @@ import numpy as np
 # audio read
 sample_rate, audio = wavfile.read("./jeden_16bit.wav")
 
+# FFT length
+nftt = 512
 
 def normalize_signal(audio_):
     audio_ = audio_ / np.max(np.abs(audio))
@@ -53,7 +55,7 @@ def window_frames(frames):
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal, 512)
+    FFT = fft.fft(signal, nftt)
     FFT = FFT[:len(FFT) // 2]
     return FFT
 
@@ -127,26 +129,36 @@ def mel_to_freq(mel_freqs):
 
 def round_freqs(freqs):
     rounded_freqs = list()
-    nfft = 0.02 + sample_rate
     for el in freqs:
-        rounded_freqs.append(np.floor((512 + 1) * el/sample_rate))
+        rounded_freqs.append(np.floor((nftt + 1) * el/sample_rate))
 
     return rounded_freqs
 
 
+# def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
+#     low_mel_freq = freq_to_mel(low_freq)
+#     high_mel_freq = freq_to_mel(high_freq)
+#     freqs = list()
+#     mel_freqs_difference = high_mel_freq - low_mel_freq
+#     mel_freqs_step = mel_freqs_difference/(filters_number + 1)
+#
+#     for el in range(0, filters_number + 1):
+#         freqs.append(low_mel_freq + el * mel_freqs_step)
+#
+#     freqs = mel_to_freq(freqs)
+#     freqs = np.floor(freqs)
+#     freqs = round_freqs(freqs)
+#     print(freqs)
+#     return freqs
+
 def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
     low_mel_freq = freq_to_mel(low_freq)
     high_mel_freq = freq_to_mel(high_freq)
-    freqs = list()
-    mel_freqs_difference = high_mel_freq - low_mel_freq
-    mel_freqs_step = mel_freqs_difference/filters_number
+    mel_points = np.linspace(low_mel_freq, high_mel_freq, filters_number + 2)
 
-    for el in range(0, filters_number + 1):
-        freqs.append(low_mel_freq + el * mel_freqs_step)
-
-    freqs = mel_to_freq(freqs)
-    # freqs = np.floor(freqs)
-    # freqs = round_freqs(freqs)
+    freqs = mel_to_freq(mel_points)
+    freqs = np.floor(freqs)
+    freqs = round_freqs(freqs)
     print(freqs)
     return freqs
 
@@ -157,14 +169,11 @@ def generate_filter_bank():
     filters_number = 14
 
     middle_freqs = calculate_filter_middle_freqs(low_freq, high_freq, filters_number)
-
-    fbank = np.zeros((filters_number, int(np.floor(4000 + 1))))
+    fbank = np.zeros((filters_number, int(np.floor(nftt / 2 + 1))))
     for m in range(1, filters_number + 1):
-        if m > 0:
-            f_m_minus = int(middle_freqs[m - 1])
+        f_m_minus = int(middle_freqs[m - 1])
         f_m = int(middle_freqs[m])
-        if m < filters_number:
-            f_m_plus = int(middle_freqs[m + 1])
+        f_m_plus = int(middle_freqs[m + 1])
 
         for k in range(f_m_minus, f_m):
             fbank[m - 1, k] = (k - middle_freqs[m - 1]) / (middle_freqs[m] - middle_freqs[m - 1])
