@@ -13,7 +13,7 @@ from main import audio, sample_rate
 import python_speech_features
 import numpy
 
-print(audio.shape)
+# print(audio.shape)
 
 # frame 20ms calculate
 frame_time = 0.02
@@ -40,7 +40,7 @@ highfreq = sample_rate/2
 preemph = 0.9
 
 # jakies wygładzenie wspolczynnikow cepstralnych (0-?),
-lifter = 22
+lifter = 14
 
 # wspolczynniki cepstralne - jesli true to zamienia na logarytmiczne o takiej samej energii
 log_or_not = True
@@ -73,9 +73,11 @@ def getDeltas():
 
 
 MFCC = getMFCC()
+print(MFCC)
+print(MFCC.shape)
 Deltas = getDeltas()
 
-print(Deltas.shape)
-print('asd')
+# print(Deltas.shape)
+# print('asd')
 
 

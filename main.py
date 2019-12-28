@@ -4,12 +4,14 @@ from scipy.io import wavfile
 import scipy.fftpack as fft
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 
 # audio read
 sample_rate, audio = wavfile.read("./jeden_16bit.wav")
 
 # FFT length
 nftt = 512
+
 
 def normalize_signal(audio_):
     audio_ = audio_ / np.max(np.abs(audio))
@@ -56,54 +58,49 @@ def window_frames(frames):
 
 def getFFT(signal):
     FFT = fft.fft(signal, nftt)
-    FFT = FFT[:len(FFT) // 2]
+    FFT = FFT[:len(FFT) // 2 + 1]
     return FFT
 
 
 def showFFT(signal):
     FFT = getFFT(signal)
-    plt.plot(FFT[:len(FFT) // 2])
+    plt.plot(FFT[:len(FFT) // 2 + 1])
     plt.show()
 
 
 def high_pass_filter(signal):
-    b, a = sig.butter(5, 0.65, 'high', analog=True)
-    [W, h] = sig.freqz(b, a, worN=512)
+    b, a = sig.butter(1, 0.8, 'high', analog=True)
+    [W, h] = sig.freqz(b, a, worN=nftt)
     W = sample_rate * W / 2 * np.pi
     filtered_signal = sig.lfilter(b, a, signal)
     return filtered_signal
 
 
 #######################################
-audio = normalize_signal(audio)
-audio = np.mean(audio, axis=1)
-filtered_audio = high_pass_filter(audio)
-framed_audio = frame_and_window_signal(filtered_audio)
-FFT_audio = getFFT(framed_audio)
+
 #######################################
 
 
-def trigger_plots():
+def trigger_plots(filtered_audio, framed_audio):
     plt.figure(1)
     plt.subplot(2, 1, 1)
     plt.title("unfiltered vs filtered signal")
     plt.plot(audio)
     plt.subplot(2, 1, 2)
     plt.plot(filtered_audio)
-
     plt.show()
 
     # FFT przed vs po filtracji
-    plt.figure(2)
-    plt.subplot(2, 1, 1)
-    plt.title("FFT of unfiltered vs filtered signal")
-    plt.plot(np.abs(getFFT(audio)))
-    plt.subplot(2, 1, 2)
-    plt.plot(np.abs(getFFT(filtered_audio)))
-    plt.show()
+    # plt.figure(2)
+    # plt.subplot(2, 1, 1)
+    # plt.title("FFT of unfiltered vs filtered signal")
+    # plt.plot(np.abs(getFFT(audio)))
+    # plt.subplot(2, 1, 2)
+    # plt.plot(np.abs(getFFT(filtered_audio)))
+    # plt.show()
 
     # sygnal po filtracji vs sygnal po filtracji zramkoway i zokienkowany
-    plt.figure(2)
+    plt.figure(3)
     plt.subplot(2, 1, 1)
     plt.title("before vs after framing and windowing ")
     plt.plot(filtered_audio)
@@ -111,8 +108,8 @@ def trigger_plots():
     plt.plot(framed_audio)
     plt.show()
 
-
-trigger_plots()
+    plt.figure(4)
+    show_bank()
 
 
 # ta funkcja poprawnie przelicza, potwierdzone
@@ -159,7 +156,6 @@ def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
     freqs = mel_to_freq(mel_points)
     freqs = np.floor(freqs)
     freqs = round_freqs(freqs)
-    print(freqs)
     return freqs
 
 
@@ -181,7 +177,6 @@ def generate_filter_bank():
         for k in range(f_m, f_m_plus):
             fbank[m - 1, k] = (middle_freqs[m + 1] - k) / (middle_freqs[m + 1] - middle_freqs[m])
 
-    print(fbank.shape)
     return fbank
 
 
@@ -192,4 +187,23 @@ def show_bank():
     plt.plot(fbank.T)
     plt.show()
 
-show_bank()
+
+def get_MFCC(audio):
+    audio = normalize_signal(audio)
+    audio = np.mean(audio, axis=1)
+    filtered_audio = high_pass_filter(audio)
+    framed_audio = frame_and_window_signal(filtered_audio)
+
+    fft = np.abs(getFFT(framed_audio))
+    fft = np.square(fft)
+
+    bands_energies = np.log(np.matmul(generate_filter_bank(), fft))
+    MFCC = scipy.fftpack.dct(bands_energies)
+    # trigger_plots(filtered_audio, framed_audio)
+    return MFCC
+
+
+MFCC = get_MFCC(audio)
+print("our MFCC: ", MFCC)
+
+
