@@ -12,11 +12,16 @@ from main import audio, sample_rate
 # from python_speech_features import mfcc
 import python_speech_features
 import numpy
+import numpy as np
+from statistics import mean
+
 
 # print(audio.shape)
 
 # frame 20ms calculate
 frame_time = 0.02
+print(len(audio))
+print(len(audio)/(frame_time* sample_rate))
 
 # obliczenie nakładkowania ramek czasowych (25%)
 winstep = 0.25 * frame_time
@@ -28,7 +33,7 @@ numcep = 13
 filters_amount= 20
 
 # wielkosc ramki FFT
-nfft = 512
+nfft = 320
 
 # najnizsza czestotliwosc filtru w melach, 80 jako najnizsze f0 czlowieka
 lowfreq = 80
@@ -52,10 +57,10 @@ window = numpy.hamming
 
 
 # mfcc calculation
-def getMFCC():
+def getMFCCa():
     MFCC = python_speech_features.base.mfcc(audio, samplerate=sample_rate, winlen=frame_time, winstep=winstep,
                                             numcep=numcep,
-                                            nfilt=filters_amount, nfft=512, lowfreq=lowfreq, highfreq=highfreq,
+                                            nfilt=filters_amount, nfft=320, lowfreq=lowfreq, highfreq=highfreq,
                                             preemph=preemph, ceplifter=lifter,
                                             appendEnergy=log_or_not, winfunc=window)
     return MFCC
@@ -72,9 +77,9 @@ def getDeltas():
     return python_speech_features.base.delta(MFCC, MFCC.shape[0])
 
 
-MFCC = getMFCC()
+MFCC = getMFCCa()
 print(MFCC)
-print(MFCC.shape)
+print("mfcc shape", MFCC.shape)
 Deltas = getDeltas()
 
 # print(Deltas.shape)
@@ -82,8 +87,47 @@ Deltas = getDeltas()
 
 
 
-a = [1, 2]
-b = [3, 5]
+a = [1, 2, 3, 5]
+b = [3, 5, 6, 8]
+c = [4, 5, 6, 4]
+d = [1, 4, 7, 8]
+e = a,b,c,d
 
-print(numpy.add(a, b))
+asd = list()
+# asd.append(a,b)
+# print(numpy.add(a, b))
 
+framed_signal = list()
+print(e)
+first_quater_index = int(0.25 * len(e[0]))
+last_quater_index = int(0.75 * len(e[0]))
+end = len(e[0])
+
+print(np.add(a,b))
+
+# for i in range(0, len(e)):
+#     #dla pierwszego elementu
+#     if not i+1 > len(e):
+#         if i == 0:
+#              framed_signal.append(e[i][0:last_quater_index])
+#
+#              first_part = int
+#              first_part = e[i][0: first_quater_index]
+#              last_part = int
+#              last_part = e[i][last_quater_index : end]
+#              print(np.mean(1, 5))
+#              print(first_part, last_part)
+#              print(np.average(first_part, last_part))
+#              # print(asd)
+#              framed_signal.append(np.average(e[i][last_quater_index : end], e[i+1][0: first_quater_index]))
+#         elif not i == len(e):
+#         # framed_signal.append(frames[i][first_quater_index:last_quater_index])
+#             framed_signal.append(np.average(e[i][last_quater_index: end], e[i + 1][0: first_quater_index]))
+#             framed_signal.append(e[i][last_quater_index:end])
+#         elif i == len(e):
+#             framed_signal.append(e[i][first_quater_index:end])
+#
+# print(framed_signal)
+
+
+# print(mean(1, 3))

@@ -9,9 +9,11 @@ import scipy
 # audio read
 sample_rate, audio = wavfile.read("./jeden_16bit.wav")
 
+
 # FFT length
 frame_time = 0.02
 nftt = frame_time * sample_rate
+# print(nftt)
 
 
 def normalize_signal(audio_):
@@ -26,10 +28,10 @@ def frame_and_window_signal(signal, frame_size=0.02):
     for el in signal:
         if not sample_position > len(signal):
             frames[el] = signal[sample_position: int(sample_position + frame_size)]
-            sample_position += int(1 * frame_size)
+            sample_position += int(0.75 * frame_size)
 
     frames = list(frames.values())
-
+    # print(frames)
     windowed_frames = window_frames(frames)
 
     # asd = []
@@ -37,8 +39,38 @@ def frame_and_window_signal(signal, frame_size=0.02):
     # asd.append(first_frame[0:int(0.75* len(first_frame))])
     # asd.append(np.mean(np.array(first_frame[(int(0.75*len(first_frame))): len(first_frame)]), np.array(first_frame[(int(len(first_frame))): 0.25 * len(first_frame)])))
 
-    framed_signal = [item for sublist in windowed_frames for item in sublist]
-    return framed_signal
+    framed_signal = list()
+
+    first_quater_index = int(np.floor(0.25 * len(frames[0])))
+    last_quater_index = int(np.floor(0.75 * len(frames[0])))
+    # print(first_quater_index, last_quater_index)
+    end = len(frames[0])
+
+    # print(frames[0][last_quater_index: end])
+    # print(frames[1][0: first_quater_index])
+    # print(len(frames[0][last_quater_index: end]),len(frames[1][0: first_quater_index]))
+    # print(np.add(frames[0][last_quater_index: end], frames[1][0: first_quater_index]))
+    # print(len(np.add(frames[0][last_quater_index: end], frames[1][0: first_quater_index])))
+    # print(np.add(frames[0][last_quater_index: end], frames[0 + 1][0: first_quater_index]))
+    for i in range(0, len(frames)-1):
+        #dla pierwszego elementu
+        if not i+1 > len(frames):
+            if i == 0:
+                framed_signal.append(frames[i][0:last_quater_index])
+                # framed_signal.append(frames[i][last_quater_index : end] + frames[i+1][0: first_quater_index])
+            elif i != len(frames):
+                framed_signal.append(np.add(frames[i][last_quater_index: end], frames[i + 1][0: first_quater_index]))
+                framed_signal.append(frames[i][first_quater_index:last_quater_index])
+            elif i == len(frames):
+                framed_signal.append(frames[i][first_quater_index:end])
+
+
+    # framed_signal_ = [item for sublist in windowed_frames for item in sublist]
+    framed_signal_ = [item for sublist in framed_signal for item in sublist]
+
+    # print(len(framed_signal_))
+    # print(len(audio))
+    return framed_signal_
 
 
 def window_frames(frames):
@@ -219,6 +251,6 @@ def get_MFCC(audio):
 
 MFCC = get_MFCC(audio)
 
-print("our MFCC: ", MFCC)
-print(MFCC.shape)
-#
+# print("our MFCC: ", MFCC)
+# print(MFCC.shape)
+
