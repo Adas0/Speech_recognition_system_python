@@ -41,28 +41,22 @@ def frame_and_window_signal(signal, frame_size=0.02):
 
     framed_signal = list()
 
-    first_quater_index = int(np.floor(0.25 * len(frames[0])))
-    last_quater_index = int(np.floor(0.75 * len(frames[0])))
+    first_quater_index = int(np.floor(0.25 * len(windowed_frames[0])))
+    last_quater_index = int(np.floor(0.75 * len(windowed_frames[0])))
     # print(first_quater_index, last_quater_index)
-    end = len(frames[0])
+    end = len(windowed_frames[0])
 
-    # print(frames[0][last_quater_index: end])
-    # print(frames[1][0: first_quater_index])
-    # print(len(frames[0][last_quater_index: end]),len(frames[1][0: first_quater_index]))
-    # print(np.add(frames[0][last_quater_index: end], frames[1][0: first_quater_index]))
-    # print(len(np.add(frames[0][last_quater_index: end], frames[1][0: first_quater_index])))
-    # print(np.add(frames[0][last_quater_index: end], frames[0 + 1][0: first_quater_index]))
-    for i in range(0, len(frames)-1):
+    for i in range(0, len(windowed_frames)-1):
         #dla pierwszego elementu
-        if not i+1 > len(frames):
+        if not i+1 > len(windowed_frames):
             if i == 0:
-                framed_signal.append(frames[i][0:last_quater_index])
+                framed_signal.append(windowed_frames[i][0:last_quater_index])
                 # framed_signal.append(frames[i][last_quater_index : end] + frames[i+1][0: first_quater_index])
-            elif i != len(frames):
-                framed_signal.append(np.add(frames[i][last_quater_index: end], frames[i + 1][0: first_quater_index]))
-                framed_signal.append(frames[i][first_quater_index:last_quater_index])
-            elif i == len(frames):
-                framed_signal.append(frames[i][first_quater_index:end])
+            elif i != len(windowed_frames):
+                framed_signal.append(np.add(windowed_frames[i][last_quater_index: end], windowed_frames[i + 1][0: first_quater_index]))
+                framed_signal.append(windowed_frames[i][first_quater_index:last_quater_index])
+            elif i == len(windowed_frames):
+                framed_signal.append(windowed_frames[i][first_quater_index:end])
 
 
     # framed_signal_ = [item for sublist in windowed_frames for item in sublist]
@@ -251,6 +245,6 @@ def get_MFCC(audio):
 
 MFCC = get_MFCC(audio)
 
-# print("our MFCC: ", MFCC)
-# print(MFCC.shape)
+print("our MFCC: ", MFCC)
+print(MFCC.shape)
 
