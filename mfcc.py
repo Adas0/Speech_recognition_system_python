@@ -81,3 +81,9 @@ Deltas = getDeltas()
 # print('asd')
 
 
+
+a = [1, 2]
+b = [3, 5]
+
+print(numpy.add(a, b))
+

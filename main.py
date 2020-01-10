@@ -10,7 +10,8 @@ import scipy
 sample_rate, audio = wavfile.read("./jeden_16bit.wav")
 
 # FFT length
-nftt = 512
+frame_time = 0.02
+nftt = frame_time * sample_rate
 
 
 def normalize_signal(audio_):
@@ -52,19 +53,19 @@ def window_frames(frames):
         frames[i] = array1 * array2
 
     plt.plot(frames[30])
-    plt.show()
+    # plt.show()
     return frames
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal, nftt)
-    FFT = FFT[:len(FFT) // 2 + 1]
+    FFT = fft.fft(signal, 320)
+    FFT = FFT[:len(FFT) // 2]
     return FFT
 
 
 def showFFT(signal):
     FFT = getFFT(signal)
-    plt.plot(FFT[:len(FFT) // 2 + 1])
+    plt.plot(FFT[:len(FFT) // 2])
     plt.show()
 
 
@@ -162,10 +163,10 @@ def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
 def generate_filter_bank():
     low_freq = 80
     high_freq = 4000
-    filters_number = 14
+    filters_number = 20
 
     middle_freqs = calculate_filter_middle_freqs(low_freq, high_freq, filters_number)
-    fbank = np.zeros((filters_number, int(np.floor(nftt / 2 + 1))))
+    fbank = np.zeros((filters_number, int(np.floor(nftt))))
     for m in range(1, filters_number + 1):
         f_m_minus = int(middle_freqs[m - 1])
         f_m = int(middle_freqs[m])
@@ -176,6 +177,7 @@ def generate_filter_bank():
 
         for k in range(f_m, f_m_plus):
             fbank[m - 1, k] = (middle_freqs[m + 1] - k) / (middle_freqs[m + 1] - middle_freqs[m])
+
 
     return fbank
 
@@ -196,14 +198,27 @@ def get_MFCC(audio):
 
     fft = np.abs(getFFT(framed_audio))
     fft = np.square(fft)
+    filter_bank = generate_filter_bank()
 
-    bands_energies = np.log(np.matmul(generate_filter_bank(), fft))
+    bands_energies = list()
+
+    for i in range(0, len(filter_bank)):
+        for j in range(0, len(filter_bank[0])):
+            if filter_bank[i][j] == 0:
+                filter_bank[i][j] = 1
+
+    for el in filter_bank:
+        bands_energies.append(el * fft)
+
+    bands_energies = 10 * np.log10(bands_energies)
+
     MFCC = scipy.fftpack.dct(bands_energies)
-    # trigger_plots(filtered_audio, framed_audio)
+    MFCC = MFCC[0:13]
     return MFCC
 
 
 MFCC = get_MFCC(audio)
+
 print("our MFCC: ", MFCC)
-
-
+print(MFCC.shape)
+#
