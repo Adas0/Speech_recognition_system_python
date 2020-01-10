@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0721b6ed-0e3d-4444-aca1-fe8d1400bd1c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +17,8 @@
       <file leaf-file-name="mfcc.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mfcc.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1615">
-              <caret line="105" column="18" lean-forward="true" selection-start-line="105" selection-start-column="18" selection-end-line="105" selection-end-column="18" />
+            <state relative-caret-position="1785">
+              <caret line="105" column="18" lean-forward="false" selection-start-line="105" selection-start-column="18" selection-end-line="105" selection-end-column="18" />
               <folding>
                 <element signature="e#454#465#0" expanded="true" />
               </folding>
@@ -28,12 +29,24 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="244" column="0" lean-forward="true" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
+            <state relative-caret-position="187">
+              <caret line="11" column="75" lean-forward="true" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
               <folding>
                 <element signature="e#1#27#0" expanded="true" />
-                <element signature="e#3475#3502#0" expanded="false" />
-                <element signature="e#4481#4554#0" expanded="false" />
+                <element signature="e#3166#3193#0" expanded="false" />
+                <element signature="e#4172#4245#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mfcc_population.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mfcc_population.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -72,6 +85,7 @@
       <list>
         <option value="$PROJECT_DIR$/mfcc.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/mfcc_population.py" />
       </list>
     </option>
   </component>
@@ -162,14 +176,33 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="2">
+    <configuration name="mfcc_population" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="interfejs_glosowy_projekt" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mfcc_population.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.main" />
       <item index="1" class="java.lang.String" itemvalue="Python.mfcc" />
+      <item index="2" class="java.lang.String" itemvalue="Python.mfcc_population" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="Python.main" />
-        <item index="1" class="java.lang.String" itemvalue="Python.mfcc" />
+        <item index="1" class="java.lang.String" itemvalue="Python.mfcc_population" />
+        <item index="2" class="java.lang.String" itemvalue="Python.mfcc" />
       </list>
     </recent_temporary>
   </component>
@@ -195,7 +228,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32072368" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2713816" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -236,8 +269,8 @@
           <caret line="225" column="0" lean-forward="true" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -258,8 +291,8 @@
           <caret line="200" column="39" lean-forward="true" selection-start-line="200" selection-start-column="39" selection-end-line="200" selection-end-column="39" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -280,8 +313,8 @@
           <caret line="207" column="0" lean-forward="true" selection-start-line="207" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -309,8 +342,8 @@
           <caret line="68" column="38" lean-forward="true" selection-start-line="68" selection-start-column="38" selection-end-line="68" selection-end-column="38" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -331,8 +364,8 @@
           <caret line="116" column="0" lean-forward="true" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -353,8 +386,8 @@
           <caret line="116" column="14" lean-forward="true" selection-start-line="116" selection-start-column="14" selection-end-line="116" selection-end-column="14" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -375,8 +408,8 @@
           <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -397,8 +430,8 @@
           <caret line="30" column="60" lean-forward="true" selection-start-line="30" selection-start-column="60" selection-end-line="30" selection-end-column="60" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -447,8 +480,8 @@
           <caret line="143" column="42" lean-forward="true" selection-start-line="143" selection-start-column="42" selection-end-line="143" selection-end-column="42" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -469,8 +502,8 @@
           <caret line="116" column="14" lean-forward="true" selection-start-line="116" selection-start-column="14" selection-end-line="116" selection-end-column="14" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -491,8 +524,8 @@
           <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -513,8 +546,8 @@
           <caret line="30" column="60" lean-forward="true" selection-start-line="30" selection-start-column="60" selection-end-line="30" selection-end-column="60" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -523,13 +556,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
           <caret line="408" column="0" lean-forward="false" selection-start-line="408" selection-start-column="0" selection-end-line="408" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Programy/Python36/Lib/site-packages/matplotlib/backends/backend_tkagg.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="561" column="0" lean-forward="false" selection-start-line="561" selection-start-column="0" selection-end-line="561" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -558,6 +584,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
           <caret line="272" column="0" lean-forward="false" selection-start-line="272" selection-start-column="0" selection-end-line="272" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -569,24 +596,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Programy/Python36/Lib/site-packages/matplotlib/backends/backend_tkagg.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="561" column="0" lean-forward="false" selection-start-line="561" selection-start-column="0" selection-end-line="561" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Programy/Python36/Lib/site-packages/matplotlib/backend_bases.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mfcc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1615">
-          <caret line="105" column="18" lean-forward="true" selection-start-line="105" selection-start-column="18" selection-end-line="105" selection-end-column="18" />
+        <state relative-caret-position="1785">
+          <caret line="105" column="18" lean-forward="false" selection-start-line="105" selection-start-column="18" selection-end-line="105" selection-end-column="18" />
           <folding>
             <element signature="e#454#465#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mfcc_population.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="244" column="0" lean-forward="true" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
+        <state relative-caret-position="187">
+          <caret line="11" column="75" lean-forward="true" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
           <folding>
             <element signature="e#1#27#0" expanded="true" />
-            <element signature="e#3475#3502#0" expanded="false" />
-            <element signature="e#4481#4554#0" expanded="false" />
+            <element signature="e#3166#3193#0" expanded="false" />
+            <element signature="e#4172#4245#0" expanded="false" />
           </folding>
         </state>
       </provider>

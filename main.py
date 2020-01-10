@@ -5,9 +5,12 @@ import scipy.fftpack as fft
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
+# from mfcc_population import a
+# print(a)
 
 # audio read
-sample_rate, audio = wavfile.read("./jeden_16bit.wav")
+sample_rate, audio = wavfile.read("./pory_roku/jesien-Adam-Korytowski.wav")
+# sample_rate, audio = wavfile.read("C:/Users/Adam/Desktop/semestr_II_mgr/interfejs_glosowy/dni_tygodnia/sroda-Adam-Korytowski")
 
 
 # FFT length
@@ -34,20 +37,12 @@ def frame_and_window_signal(signal, frame_size=0.02):
     # print(frames)
     windowed_frames = window_frames(frames)
 
-    # asd = []
-    # first_frame = frames[0]
-    # asd.append(first_frame[0:int(0.75* len(first_frame))])
-    # asd.append(np.mean(np.array(first_frame[(int(0.75*len(first_frame))): len(first_frame)]), np.array(first_frame[(int(len(first_frame))): 0.25 * len(first_frame)])))
-
     framed_signal = list()
-
     first_quater_index = int(np.floor(0.25 * len(windowed_frames[0])))
     last_quater_index = int(np.floor(0.75 * len(windowed_frames[0])))
-    # print(first_quater_index, last_quater_index)
     end = len(windowed_frames[0])
 
     for i in range(0, len(windowed_frames)-1):
-        #dla pierwszego elementu
         if not i+1 > len(windowed_frames):
             if i == 0:
                 framed_signal.append(windowed_frames[i][0:last_quater_index])
@@ -58,12 +53,7 @@ def frame_and_window_signal(signal, frame_size=0.02):
             elif i == len(windowed_frames):
                 framed_signal.append(windowed_frames[i][first_quater_index:end])
 
-
-    # framed_signal_ = [item for sublist in windowed_frames for item in sublist]
     framed_signal_ = [item for sublist in framed_signal for item in sublist]
-
-    # print(len(framed_signal_))
-    # print(len(audio))
     return framed_signal_
 
 
@@ -240,11 +230,14 @@ def get_MFCC(audio):
 
     MFCC = scipy.fftpack.dct(bands_energies)
     MFCC = MFCC[0:13]
+    # trigger_plots(filtered_audio, framed_audio)
     return MFCC
 
 
 MFCC = get_MFCC(audio)
 
-print("our MFCC: ", MFCC)
+# print("our MFCC: ", MFCC)
 print(MFCC.shape)
+
+
 
