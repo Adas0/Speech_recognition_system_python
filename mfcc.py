@@ -21,10 +21,10 @@ from statistics import mean
 # frame 20ms calculate
 frame_time = 0.02
 print(len(audio))
-print(len(audio)/(frame_time* sample_rate))
+print(len(audio)/(frame_time * sample_rate))
 
 # obliczenie nakładkowania ramek czasowych (25%)
-winstep = 0.25 * frame_time
+winstep = 0.25
 
 # liczba wspolczynnikow mfcc
 numcep = 13
@@ -73,37 +73,37 @@ def function():
   #297x13 to oznacza wiec mamy 297 ramek (160 ktore nachodza na siebie (25% długości nachodzenia)
 
 
-def getDeltas():
-    return python_speech_features.base.delta(MFCC, MFCC.shape[0])
+# def getDeltas():
+#     return python_speech_features.base.delta(MFCC, MFCC.shape[0])
 
 
 MFCC = getMFCCa()
 print(MFCC)
 print("mfcc shape", MFCC.shape)
-Deltas = getDeltas()
+# Deltas = getDeltas()
 
 # print(Deltas.shape)
 # print('asd')
 
 
-
-a = [1, 2, 3, 5]
-b = [3, 5, 6, 8]
-c = [4, 5, 6, 4]
-d = [1, 4, 7, 8]
-e = a,b,c,d
-
-asd = list()
-# asd.append(a,b)
-# print(numpy.add(a, b))
-
-framed_signal = list()
-print(e)
-first_quater_index = int(0.25 * len(e[0]))
-last_quater_index = int(0.75 * len(e[0]))
-end = len(e[0])
-
-print(np.add(a,b))
+#
+# a = [1, 2, 3, 5]
+# b = [3, 5, 6, 8]
+# c = [4, 5, 6, 4]
+# d = [1, 4, 7, 8]
+# e = a,b,c,d
+#
+# asd = list()
+# # asd.append(a,b)
+# # print(numpy.add(a, b))
+#
+# framed_signal = list()
+# print(e)
+# first_quater_index = int(0.25 * len(e[0]))
+# last_quater_index = int(0.75 * len(e[0]))
+# end = len(e[0])
+#
+# print(np.add(a,b))
 
 # for i in range(0, len(e)):
 #     #dla pierwszego elementu

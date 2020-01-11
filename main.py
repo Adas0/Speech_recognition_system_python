@@ -15,7 +15,8 @@ sample_rate, audio = wavfile.read("./pory_roku/jesien-Adam-Korytowski.wav")
 
 # FFT length
 frame_time = 0.02
-nftt = frame_time * sample_rate
+# nftt = frame_time * sample_rate
+nftt = 38
 # print(nftt)
 
 
@@ -24,8 +25,8 @@ def normalize_signal(audio_):
     return audio_
 
 
-def frame_and_window_signal(signal, frame_size=0.02):
-    frame_size = int(frame_size * sample_rate)  # number of samples in frame
+def frame_and_window_signal(signal, frame_time=0.02):
+    frame_size = int(frame_time * sample_rate)  # number of samples in frame
     frames = {}
     sample_position = 0
     for el in signal:
@@ -34,7 +35,7 @@ def frame_and_window_signal(signal, frame_size=0.02):
             sample_position += int(0.75 * frame_size)
 
     frames = list(frames.values())
-    # print(frames)
+
     windowed_frames = window_frames(frames)
 
     framed_signal = list()
@@ -74,8 +75,8 @@ def window_frames(frames):
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal, 320)
-    FFT = FFT[:len(FFT) // 2]
+    FFT = fft.fft(signal, 38)
+    FFT = FFT[:len(FFT)]
     return FFT
 
 
