@@ -24,7 +24,7 @@ print(len(audio))
 print(len(audio)/(frame_time * sample_rate))
 
 # obliczenie nakładkowania ramek czasowych (25%)
-winstep = 0.25
+winstep = 0.02
 
 # liczba wspolczynnikow mfcc
 numcep = 13
@@ -58,11 +58,9 @@ window = numpy.hamming
 
 # mfcc calculation
 def getMFCCa():
-    MFCC = python_speech_features.base.mfcc(audio, samplerate=sample_rate, winlen=frame_time, winstep=winstep,
-                                            numcep=numcep,
-                                            nfilt=filters_amount, nfft=320, lowfreq=lowfreq, highfreq=highfreq,
-                                            preemph=preemph, ceplifter=lifter,
-                                            appendEnergy=log_or_not, winfunc=window)
+    MFCC = python_speech_features.base.mfcc(audio, samplerate=16000, winlen=0.025, winstep=0.01,
+                                            numcep=13, nfilt=20, nfft=512, lowfreq=0, highfreq=None, preemph=0.97,
+                                            ceplifter=22, appendEnergy=True, winfunc=numpy.hamming)
     return MFCC
 
 

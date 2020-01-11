@@ -9,9 +9,11 @@ import scipy
 # print(a)
 
 # audio read
-sample_rate, audio = wavfile.read("./pory_roku/jesien-Adam-Korytowski.wav")
+sample_rate, audio = wavfile.read("./pory_roku_8k/Jesień-Karol-Kowalski.wav")
 # sample_rate, audio = wavfile.read("C:/Users/Adam/Desktop/semestr_II_mgr/interfejs_glosowy/dni_tygodnia/sroda-Adam-Korytowski")
 
+sample_rate2, audio2 = wavfile.read("./pory_roku/Wiosna-Magda-Ceglarek.wav")
+sample_rate3, audio3 = wavfile.read("./pory_roku/wiosna-Adam-Korytowski.wav")
 
 # FFT length
 frame_time = 0.02
@@ -47,7 +49,6 @@ def frame_and_window_signal(signal, frame_time=0.02):
         if not i+1 > len(windowed_frames):
             if i == 0:
                 framed_signal.append(windowed_frames[i][0:last_quater_index])
-                # framed_signal.append(frames[i][last_quater_index : end] + frames[i+1][0: first_quater_index])
             elif i != len(windowed_frames):
                 framed_signal.append(np.add(windowed_frames[i][last_quater_index: end], windowed_frames[i + 1][0: first_quater_index]))
                 framed_signal.append(windowed_frames[i][first_quater_index:last_quater_index])
@@ -66,7 +67,6 @@ def window_frames(frames):
     for i in range(0, len(frames)):
         array1 = np.array(frames[i])
         array2 = np.hamming(len(frames[i]))
-
         frames[i] = array1 * array2
 
     plt.plot(frames[30])
@@ -195,7 +195,6 @@ def generate_filter_bank():
         for k in range(f_m, f_m_plus):
             fbank[m - 1, k] = (middle_freqs[m + 1] - k) / (middle_freqs[m + 1] - middle_freqs[m])
 
-
     return fbank
 
 
@@ -236,9 +235,23 @@ def get_MFCC(audio):
 
 
 MFCC = get_MFCC(audio)
-
+MFCC2 = get_MFCC(audio2)
+MFCC3 = get_MFCC(audio3)
 # print("our MFCC: ", MFCC)
 print(MFCC.shape)
 
 
+from dtw import dtw
+
+from numpy.linalg import norm
+dist, cost, acc_cost, path = dtw(MFCC.T, MFCC2.T, dist=lambda x, y: norm(x - y, ord=1))
+print ('Normalized distance between the two sounds:', dist)
+
+dist2, cost2, acc_cost2, path2 = dtw(MFCC2.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
+print ('Normalized distance between the two sounds:', dist2)
+
+dist3, cost3, acc_cost3, path3 = dtw(MFCC.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
+print ('Normalized distance between the two sounds:', dist3)
+
+print(MFCC2.shape, MFCC3.shape)
 
