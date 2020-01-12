@@ -1,7 +1,7 @@
 from scipy.io import wavfile
 import glob
 import os
-
+from main import
 
 class WavFile:
     def __init__(self):
@@ -25,13 +25,13 @@ class WordPattern:
         pass
 
 
-files_zima = list()
-os.chdir("./pory_roku")
-for file in glob.glob("zima*.wav"):
-    files_zima.append(file)
-
-num_ppl_in_base = 6
-
-# files[0].path = "./pory_roku/Wiosna-Magda-Ceglarek.wav"
-
-print("asd" + files_zima[0])
+# files_zima = list()
+# os.chdir("./pory_roku")
+# for file in glob.glob("zima*.wav"):
+#     files_zima.append(file)
+#
+# num_ppl_in_base = 6
+#
+# # files[0].path = "./pory_roku/Wiosna-Magda-Ceglarek.wav"
+#
+# print("asd" + files_zima[0])

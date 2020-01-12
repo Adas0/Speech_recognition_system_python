@@ -9,16 +9,16 @@ import scipy
 # print(a)
 
 # audio read
-sample_rate, audio = wavfile.read("./pory_roku_8k/Jesień-Karol-Kowalski.wav")
+# sample_rate, audio = wavfile.read("./pory_roku_8k/Jesień-Karol-Kowalski.wav")
 # sample_rate, audio = wavfile.read("C:/Users/Adam/Desktop/semestr_II_mgr/interfejs_glosowy/dni_tygodnia/sroda-Adam-Korytowski")
 
-sample_rate2, audio2 = wavfile.read("./pory_roku/Wiosna-Magda-Ceglarek.wav")
-sample_rate3, audio3 = wavfile.read("./pory_roku/wiosna-Adam-Korytowski.wav")
+# sample_rate, audio = wavfile.read("./pory_roku/Wiosna-Magda-Ceglarek.wav")
+sample_rate, audio = wavfile.read("./pory_roku_8k/Zima-Bartłomiej-Kusmirek.wav")
 
 # FFT length
 frame_time = 0.02
 # nftt = frame_time * sample_rate
-nftt = 64
+nftt = 160
 # print(nftt)
 
 
@@ -50,7 +50,13 @@ def frame_and_window_signal(signal, frame_time=0.02):
             if i == 0:
                 framed_signal.append(windowed_frames[i][0:last_quater_index])
             elif i != len(windowed_frames):
-                framed_signal.append(np.add(windowed_frames[i][last_quater_index: end], windowed_frames[i + 1][0: first_quater_index]))
+                last_quater = windowed_frames[i][last_quater_index: end]
+                first_quater = windowed_frames[i + 1][0: first_quater_index]
+                if not len(last_quater) == len(first_quater):
+                    first_quater = list(first_quater)
+                    first_quater.append(0)
+                    first_quater = np.array(first_quater)
+                framed_signal.append(np.add(last_quater, first_quater))
                 framed_signal.append(windowed_frames[i][first_quater_index:last_quater_index])
             elif i == len(windowed_frames):
                 framed_signal.append(windowed_frames[i][first_quater_index:end])
@@ -75,7 +81,7 @@ def window_frames(frames):
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal, 64)
+    FFT = fft.fft(signal, 160)
     FFT = FFT[:len(FFT)]
     return FFT
 
@@ -215,7 +221,7 @@ def get_MFCC(audio):
     fft = np.abs(getFFT(framed_audio))
     fft = np.square(fft)
     filter_bank = generate_filter_bank()
-    print(filter_bank.shape)
+    # print(filter_bank.shape)
     bands_energies = list()
 
     # print(filter_bank)
@@ -227,7 +233,7 @@ def get_MFCC(audio):
     for el in filter_bank:
         bands_energies.append(el * fft)
 
-    bands_energies = 10 * np.log10(bands_energies)
+    bands_energies = 20 * np.log10(bands_energies)
 
     MFCC = scipy.fftpack.dct(bands_energies)
     MFCC = MFCC[0:13]
@@ -238,8 +244,57 @@ def get_MFCC(audio):
 MFCC = get_MFCC(audio)
 # MFCC2 = get_MFCC(audio2)
 # MFCC3 = get_MFCC(audio3)
-print("our MFCC: ", MFCC)
+# print("our MFCC: ", MFCC)
 print(MFCC.shape)
+
+
+
+import glob
+import os
+files_zima = list()
+os.chdir("./pory_roku_8k")
+
+
+# class WordPattern:
+    # def get_mfcc_pattern(self, word):
+    #     MFCCs = list()
+    #     for file in glob.glob(word + "*.wav"):
+    #         files_zima.append(file)
+    #         _audio, _sample_rate = wavfile.read(file)
+    #         MFCCs.append(get_MFCC(_audio))
+    #     avg_mfcc = np.mean(MFCCs)
+    #     print(len(MFCCs))
+    #     print(avg_mfcc.shape)
+    #     return avg_mfcc
+# avg_mfcc_zima = list()
+
+
+def get_mfcc_pattern(word):
+        MFCCs = list()
+        files_zima = list()
+        for file in glob.glob( word + "*.wav"):
+            _audio = list()
+            _audio.clear()
+            files_zima.append(file)
+            _sample_rate, _audio = wavfile.read(file)
+            try:
+                mfcc = get_MFCC(_audio)
+                # print(mfcc.shape)
+            except:
+                print("cannot calculate mfcc")
+            MFCCs.append(get_MFCC(_audio))
+        avg_mfcc = np.mean(MFCCs)
+        # print(len(MFCCs))
+        # print(avg_mfcc.shape)
+        return avg_mfcc
+
+
+get_mfcc_pattern("zima")
+
+
+
+
+# get_MFCC()
 
 
 from dtw import dtw

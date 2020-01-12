@@ -30,7 +30,7 @@ winstep = 0.02
 numcep = 13
 
 # liczba filtrow (14-20)
-filters_amount= 20
+filters_amount = 20
 
 # wielkosc ramki FFT
 nfft = 512
@@ -59,7 +59,7 @@ window = numpy.hamming
 # mfcc calculation
 def getMFCCa():
     MFCC = python_speech_features.base.mfcc(audio, samplerate=16000, winlen=0.025, winstep=0.01,
-                                            numcep=13, nfilt=20, nfft=512, lowfreq=0, highfreq=None, preemph=0.97,
+                                            numcep=13, nfilt=20, nfft=64, lowfreq=0, highfreq=None, preemph=0.97,
                                             ceplifter=22, appendEnergy=True, winfunc=numpy.hamming)
     return MFCC
 
@@ -129,3 +129,6 @@ print("mfcc shape", MFCC.shape)
 
 
 # print(mean(1, 3))
+
+asd = "asd"
+print(asd + "qwe")
