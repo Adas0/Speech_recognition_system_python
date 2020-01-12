@@ -33,7 +33,7 @@ numcep = 13
 filters_amount= 20
 
 # wielkosc ramki FFT
-nfft = 320
+nfft = 512
 
 # najnizsza czestotliwosc filtru w melach, 80 jako najnizsze f0 czlowieka
 lowfreq = 80

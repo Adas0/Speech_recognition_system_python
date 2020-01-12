@@ -18,12 +18,12 @@ sample_rate3, audio3 = wavfile.read("./pory_roku/wiosna-Adam-Korytowski.wav")
 # FFT length
 frame_time = 0.02
 # nftt = frame_time * sample_rate
-nftt = 38
+nftt = 64
 # print(nftt)
 
 
 def normalize_signal(audio_):
-    audio_ = audio_ / np.max(np.abs(audio))
+    audio_ = audio_ / np.max(np.abs(audio_))
     return audio_
 
 
@@ -75,7 +75,7 @@ def window_frames(frames):
 
 
 def getFFT(signal):
-    FFT = fft.fft(signal, 38)
+    FFT = fft.fft(signal, 64)
     FFT = FFT[:len(FFT)]
     return FFT
 
@@ -215,14 +215,15 @@ def get_MFCC(audio):
     fft = np.abs(getFFT(framed_audio))
     fft = np.square(fft)
     filter_bank = generate_filter_bank()
-
+    print(filter_bank.shape)
     bands_energies = list()
 
+    # print(filter_bank)
     for i in range(0, len(filter_bank)):
         for j in range(0, len(filter_bank[0])):
             if filter_bank[i][j] == 0:
                 filter_bank[i][j] = 1
-
+    # print(filter_bank)
     for el in filter_bank:
         bands_energies.append(el * fft)
 
@@ -235,23 +236,23 @@ def get_MFCC(audio):
 
 
 MFCC = get_MFCC(audio)
-MFCC2 = get_MFCC(audio2)
-MFCC3 = get_MFCC(audio3)
-# print("our MFCC: ", MFCC)
+# MFCC2 = get_MFCC(audio2)
+# MFCC3 = get_MFCC(audio3)
+print("our MFCC: ", MFCC)
 print(MFCC.shape)
 
 
 from dtw import dtw
 
 from numpy.linalg import norm
-dist, cost, acc_cost, path = dtw(MFCC.T, MFCC2.T, dist=lambda x, y: norm(x - y, ord=1))
-print ('Normalized distance between the two sounds:', dist)
-
-dist2, cost2, acc_cost2, path2 = dtw(MFCC2.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
-print ('Normalized distance between the two sounds:', dist2)
-
-dist3, cost3, acc_cost3, path3 = dtw(MFCC.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
-print ('Normalized distance between the two sounds:', dist3)
-
-print(MFCC2.shape, MFCC3.shape)
+# dist, cost, acc_cost, path = dtw(MFCC.T, MFCC2.T, dist=lambda x, y: norm(x - y, ord=1))
+# print ('Normalized distance between the two sounds:', dist)
+#
+# dist2, cost2, acc_cost2, path2 = dtw(MFCC2.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
+# print ('Normalized distance between the two sounds:', dist2)
+#
+# dist3, cost3, acc_cost3, path3 = dtw(MFCC.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
+# print ('Normalized distance between the two sounds:', dist3)
+#
+# print(MFCC2.shape, MFCC3.shape)
 
