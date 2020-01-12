@@ -1,25 +1,18 @@
-
+from numpy.linalg import norm
 import scipy.signal as sig
 from scipy.io import wavfile
 import scipy.fftpack as fft
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-# from mfcc_population import a
-# print(a)
+import glob
+import os
+from dtw import dtw
 
-# audio read
-# sample_rate, audio = wavfile.read("./pory_roku_8k/Jesień-Karol-Kowalski.wav")
-# sample_rate, audio = wavfile.read("C:/Users/Adam/Desktop/semestr_II_mgr/interfejs_glosowy/dni_tygodnia/sroda-Adam-Korytowski")
+sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
 
-# sample_rate, audio = wavfile.read("./pory_roku/Wiosna-Magda-Ceglarek.wav")
-sample_rate, audio = wavfile.read("./pory_roku_8k/Zima-Bartłomiej-Kusmirek.wav")
-
-# FFT length
 frame_time = 0.02
-# nftt = frame_time * sample_rate
 nftt = 160
-# print(nftt)
 
 
 def normalize_signal(audio_):
@@ -242,72 +235,65 @@ def get_MFCC(audio):
 
 
 MFCC = get_MFCC(audio)
-# MFCC2 = get_MFCC(audio2)
-# MFCC3 = get_MFCC(audio3)
-# print("our MFCC: ", MFCC)
-print(MFCC.shape)
+
+appropriate_mfcc_shape = list()
+try:
+    appropriate_mfcc_shape = MFCC.shape
+except:
+    print("no shape")
 
 
-
-import glob
-import os
 files_zima = list()
 os.chdir("./pory_roku_8k")
 
 
-# class WordPattern:
-    # def get_mfcc_pattern(self, word):
-    #     MFCCs = list()
-    #     for file in glob.glob(word + "*.wav"):
-    #         files_zima.append(file)
-    #         _audio, _sample_rate = wavfile.read(file)
-    #         MFCCs.append(get_MFCC(_audio))
-    #     avg_mfcc = np.mean(MFCCs)
-    #     print(len(MFCCs))
-    #     print(avg_mfcc.shape)
-    #     return avg_mfcc
-# avg_mfcc_zima = list()
-
-
 def get_mfcc_pattern(word):
-        MFCCs = list()
-        files_zima = list()
-        for file in glob.glob( word + "*.wav"):
-            _audio = list()
-            _audio.clear()
-            files_zima.append(file)
-            _sample_rate, _audio = wavfile.read(file)
-            try:
-                mfcc = get_MFCC(_audio)
-                # print(mfcc.shape)
-            except:
-                print("cannot calculate mfcc")
-            MFCCs.append(get_MFCC(_audio))
-        avg_mfcc = np.mean(MFCCs)
-        # print(len(MFCCs))
-        # print(avg_mfcc.shape)
-        return avg_mfcc
+    MFCCs = list()
+    word_files = list()
+
+    for file in glob.glob(word + "*.wav"):
+        _audio = list()
+        _audio.clear()
+        mfcc = ()
+        try:
+            word_files.append(file)
+        except:
+            print("cannot find files")
+        _sample_rate, _audio = wavfile.read(file)
+        try:
+            mfcc = get_MFCC(_audio)
+        except:
+            print("cannot calculate mfcc")
+        MFCCs.append(mfcc)
+    sum = 0
+    avgerage_mfcc = 0
+    for i in range(len(MFCCs)):
+        MFCCs[i] = np.matrix(MFCCs[i])
+        sum += (np.array(MFCCs[i]))
+        avgerage_mfcc = sum/len(MFCCs)
+        avgerage_mfcc = np.matrix(avgerage_mfcc)
+    return avgerage_mfcc
 
 
-get_mfcc_pattern("zima")
+wiosna = get_mfcc_pattern("wiosna")
+lato = get_mfcc_pattern("lato")
+jesien = get_mfcc_pattern("jesien")
+zima = get_mfcc_pattern("zima")
+
+patterns = list()
+patterns.append(wiosna)
+patterns.append(lato)
+patterns.append(jesien)
+patterns.append(zima)
+for el in patterns:
+    if not el.shape == appropriate_mfcc_shape:
+        print("wrong shapes")
 
 
+distances = list()
+for el in patterns:
+    dist, cost, acc_cost, path = dtw(MFCC.T, el.T, dist=lambda x, y: norm(x - y, ord=1))
+    distances.append(dist)
 
-
-# get_MFCC()
-
-
-from dtw import dtw
-
-from numpy.linalg import norm
-# dist, cost, acc_cost, path = dtw(MFCC.T, MFCC2.T, dist=lambda x, y: norm(x - y, ord=1))
-# print ('Normalized distance between the two sounds:', dist)
-#
-# dist2, cost2, acc_cost2, path2 = dtw(MFCC2.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
-# print ('Normalized distance between the two sounds:', dist2)
-#
-# dist3, cost3, acc_cost3, path3 = dtw(MFCC.T, MFCC3.T, dist=lambda x, y: norm(x - y, ord=1))
-# print ('Normalized distance between the two sounds:', dist3)
-#
-# print(MFCC2.shape, MFCC3.shape)
+print(distances)
 

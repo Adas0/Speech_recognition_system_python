@@ -132,3 +132,7 @@ print("mfcc shape", MFCC.shape)
 
 asd = "asd"
 print(asd + "qwe")
+
+
+asd = [1,2,3], [2,3,4]
+print(asd.shape)
