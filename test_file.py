@@ -31,3 +31,10 @@ for i in range(0, len(all)):
 avg = sum / len(all)
 
 print(avg)
+
+
+a= [1, 2, 3, 4]
+import scipy.fftpack as s
+a = s.fft(a)
+# a = a[:len(a) // 2]
+print(a)

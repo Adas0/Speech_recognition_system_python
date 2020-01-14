@@ -12,7 +12,7 @@ from dtw import dtw
 sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
 
 frame_time = 0.02
-nftt = 160
+nftt = frame_time * sample_rate
 
 
 def normalize_signal(audio_):
@@ -32,8 +32,9 @@ def frame_and_window_signal(signal, frame_time=0.02):
     frames = list(frames.values())
 
     windowed_frames = window_frames(frames)
-
+    print(len(windowed_frames))
     framed_signal = list()
+
     first_quater_index = int(np.floor(0.25 * len(windowed_frames[0])))
     last_quater_index = int(np.floor(0.75 * len(windowed_frames[0])))
     end = len(windowed_frames[0])
@@ -54,7 +55,9 @@ def frame_and_window_signal(signal, frame_time=0.02):
             elif i == len(windowed_frames):
                 framed_signal.append(windowed_frames[i][first_quater_index:end])
 
+    # print(len(frames))
     framed_signal_ = [item for sublist in framed_signal for item in sublist]
+    print(len(framed_signal_))
     return framed_signal_
 
 
@@ -144,7 +147,7 @@ def mel_to_freq(mel_freqs):
 def round_freqs(freqs):
     rounded_freqs = list()
     for el in freqs:
-        rounded_freqs.append(np.floor((nftt + 1) * el/sample_rate))
+        rounded_freqs.append(np.floor((nftt + 1)  * 2 *el/sample_rate))
 
     return rounded_freqs
 
@@ -182,7 +185,8 @@ def generate_filter_bank():
     filters_number = 20
 
     middle_freqs = calculate_filter_middle_freqs(low_freq, high_freq, filters_number)
-    fbank = np.zeros((filters_number, int(np.floor(nftt))))
+    # fbank = np.zeros(filters_number, int(np.floor(nftt/2 + 1)))
+    fbank = np.zeros((filters_number, int(np.floor(nftt ))))
     for m in range(1, filters_number + 1):
         f_m_minus = int(middle_freqs[m - 1])
         f_m = int(middle_freqs[m])
@@ -213,16 +217,19 @@ def get_MFCC(audio):
 
     fft = np.abs(getFFT(framed_audio))
     fft = np.square(fft)
+    # print(len(fft))
     filter_bank = generate_filter_bank()
+    len(filter_bank[0])
     # print(filter_bank.shape)
     bands_energies = list()
 
-    # print(filter_bank)
+    # print(filter_bank.shape)
     for i in range(0, len(filter_bank)):
         for j in range(0, len(filter_bank[0])):
             if filter_bank[i][j] == 0:
                 filter_bank[i][j] = 1
     # print(filter_bank)
+    # len(filter_bank[0])
     for el in filter_bank:
         bands_energies.append(el * fft)
 
@@ -275,25 +282,25 @@ def get_mfcc_pattern(word):
     return avgerage_mfcc
 
 
-wiosna = get_mfcc_pattern("wiosna")
-lato = get_mfcc_pattern("lato")
-jesien = get_mfcc_pattern("jesien")
-zima = get_mfcc_pattern("zima")
-
-patterns = list()
-patterns.append(wiosna)
-patterns.append(lato)
-patterns.append(jesien)
-patterns.append(zima)
-for el in patterns:
-    if not el.shape == appropriate_mfcc_shape:
-        print("wrong shapes")
-
-
-distances = list()
-for el in patterns:
-    dist, cost, acc_cost, path = dtw(MFCC.T, el.T, dist=lambda x, y: norm(x - y, ord=1))
-    distances.append(dist)
-
-print(distances)
+# wiosna = get_mfcc_pattern("wiosna")
+# lato = get_mfcc_pattern("lato")
+# jesien = get_mfcc_pattern("jesien")
+# zima = get_mfcc_pattern("zima")
+#
+# patterns = list()
+# patterns.append(wiosna)
+# patterns.append(lato)
+# patterns.append(jesien)
+# patterns.append(zima)
+# for el in patterns:
+#     if not el.shape == appropriate_mfcc_shape:
+#         print("wrong shapes")
+#
+#
+# distances = list()
+# for el in patterns:
+#     dist, cost, acc_cost, path = dtw(MFCC.T, el.T, dist=lambda x, y: norm(x - y, ord=1))
+#     distances.append(dist)
+#
+# print(distances)
 

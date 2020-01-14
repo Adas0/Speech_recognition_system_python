@@ -76,8 +76,9 @@ def function():
 
 
 MFCC = getMFCCa()
-print(MFCC)
+# print(MFCC)
 print("mfcc shape", MFCC.shape)
+print(MFCC[0])
 # Deltas = getDeltas()
 
 # print(Deltas.shape)
