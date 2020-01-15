@@ -9,7 +9,7 @@ import glob
 import os
 from dtw import dtw
 
-sample_rate, audio = wavfile.read("./wiosna-Adam-Korytowski.wav")
+sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
 
 frame_time = 0.02
 nftt = frame_time * sample_rate
@@ -60,7 +60,6 @@ def frame_and_window_signal(signal, frame_time=0.02):
                 framed_signal.append(windowed_frames[i][first_quater_index:end])
 
     framed_signal_ = [item for sublist in framed_signal for item in sublist]
-    print(len(framed_signal_))
     return framed_signal_, fft_frames
 
 
@@ -156,22 +155,6 @@ def round_freqs(freqs):
     return rounded_freqs
 
 
-# def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
-#     low_mel_freq = freq_to_mel(low_freq)
-#     high_mel_freq = freq_to_mel(high_freq)
-#     freqs = list()
-#     mel_freqs_difference = high_mel_freq - low_mel_freq
-#     mel_freqs_step = mel_freqs_difference/(filters_number + 1)
-#
-#     for el in range(0, filters_number + 1):
-#         freqs.append(low_mel_freq + el * mel_freqs_step)
-#
-#     freqs = mel_to_freq(freqs)
-#     freqs = np.floor(freqs)
-#     freqs = round_freqs(freqs)
-#     print(freqs)
-#     return freqs
-
 def calculate_filter_middle_freqs(low_freq, high_freq, filters_number):
     low_mel_freq = freq_to_mel(low_freq)
     high_mel_freq = freq_to_mel(high_freq)
@@ -240,7 +223,7 @@ def get_MFCC(audio):
     mel_filtered_fft = list()
 
     fft_frames[-1] = fill_incomplete_frame(fft_frames[-1], len(fft_frames[0]))
-    print(len(fft_frames[-1]))
+    # print(len(fft_frames[-1]))
     before = fft_frames
     new = list()
     # filtered = 0
@@ -252,9 +235,25 @@ def get_MFCC(audio):
         new_frames.append(filtered)
 
     # MFCC = new_frames
-    MFCC = scipy.fftpack.dct(new_frames)
-    MFCC = MFCC[0:13]
-    # MFCC = list()
+    # matrix
+
+
+
+    matrix = scipy.fftpack.dct(new_frames)
+    # to jest macierz (ramki x probki w tych ramkach). czyli jakieś 263x160. (260 ramek, każda po 160 próbek)
+    # ma powstać: 263 x 20. Czyli z tego 160 trzeba zrobić 20. Jak? - Trzeba uśrednić wartości w pasmach melowych:
+    # czyli: patrzysz gdzie się zaczyna i kończy pierwszy filtr : zaczyna się w indeksie 4, kończy w 8. więc bierzesz
+    # wartości od 4 do 8 i robisz z niech średnią. Ta średnia to pierwszy element. Średnia z drugiego pasma to będzie
+    # drugi element, etc, aż do dwudziestego filtra. (Jak otworzysz sobie zmienna filter_bank to tam widac gdzie
+    # dokladnie sie zaczynaja i koncza te filtry)
+    # ta macierz to bedzie już poprawne mfcc
+
+
+
+
+
+    # MFCC = MFCC[0:13]
+    MFCC = list()
     # trigger_plots(filtered_audio, framed_audio)
     return MFCC
 
