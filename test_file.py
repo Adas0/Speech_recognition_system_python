@@ -1,5 +1,6 @@
 
 import numpy as np
+from scipy import fft as fft
 
 asd = np.array([1, 2, 3])
 
@@ -30,11 +31,22 @@ for i in range(0, len(all)):
 
 avg = sum / len(all)
 
-print(avg)
+# print(avg)
 
 
 a= [1, 2, 3, 4]
 import scipy.fftpack as s
 a = s.fft(a)
 # a = a[:len(a) // 2]
-print(a)
+# print(a)
+
+x = [[1,2], [2,3]]
+y = fft(x)
+print(y)
+
+q = [1,2]
+w = [3,4]
+print(np.multiply(q,w))
+
+f = [1,2,3,4,5,3,5,3,5,3,4,3,4];
+print(np.sum(f[1:3]))

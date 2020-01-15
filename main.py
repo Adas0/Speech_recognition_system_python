@@ -9,7 +9,7 @@ import glob
 import os
 from dtw import dtw
 
-sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
+sample_rate, audio = wavfile.read("./wiosna-Adam-Korytowski.wav")
 
 frame_time = 0.02
 nftt = frame_time * sample_rate
@@ -32,7 +32,11 @@ def frame_and_window_signal(signal, frame_time=0.02):
     frames = list(frames.values())
 
     windowed_frames = window_frames(frames)
-    print(len(windowed_frames))
+    # fft_frames = fft.fft(windowed_frames)
+    fft_frames = list()
+    for el in windowed_frames:
+        fft_frames.append(getFFT(el))
+
     framed_signal = list()
 
     first_quater_index = int(np.floor(0.25 * len(windowed_frames[0])))
@@ -55,10 +59,9 @@ def frame_and_window_signal(signal, frame_time=0.02):
             elif i == len(windowed_frames):
                 framed_signal.append(windowed_frames[i][first_quater_index:end])
 
-    # print(len(frames))
     framed_signal_ = [item for sublist in framed_signal for item in sublist]
     print(len(framed_signal_))
-    return framed_signal_
+    return framed_signal_, fft_frames
 
 
 def window_frames(frames):
@@ -79,6 +82,7 @@ def window_frames(frames):
 def getFFT(signal):
     FFT = fft.fft(signal, 160)
     FFT = FFT[:len(FFT)]
+    FFT = np.abs(FFT)
     return FFT
 
 
@@ -209,39 +213,54 @@ def show_bank():
     plt.show()
 
 
+def fill_incomplete_frame(frame, complete_frame_len):
+    frame = list(frame)
+    for i in range(0, complete_frame_len - len(frame)):
+        frame.append(0)
+    return np.array(frame)
+
+
 def get_MFCC(audio):
     audio = normalize_signal(audio)
     audio = np.mean(audio, axis=1)
     filtered_audio = high_pass_filter(audio)
-    framed_audio = frame_and_window_signal(filtered_audio)
+    framed_audio, fft_frames = frame_and_window_signal(filtered_audio)
 
     fft = np.abs(getFFT(framed_audio))
     fft = np.square(fft)
-    # print(len(fft))
-    filter_bank = generate_filter_bank()
-    len(filter_bank[0])
-    # print(filter_bank.shape)
-    bands_energies = list()
 
-    # print(filter_bank.shape)
-    for i in range(0, len(filter_bank)):
-        for j in range(0, len(filter_bank[0])):
+    filter_bank = generate_filter_bank()
+
+    for i in range(0, len(filter_bank)):    # numer filtru
+        # next((i for i, x in enumerate(filter_bank[i]) if x), None)
+        for j in range(0, len(filter_bank[0])):     # numer elementu w filtrze
             if filter_bank[i][j] == 0:
                 filter_bank[i][j] = 1
-    # print(filter_bank)
-    # len(filter_bank[0])
-    for el in filter_bank:
-        bands_energies.append(el * fft)
 
-    bands_energies = 20 * np.log10(bands_energies)
+    mel_filtered_fft = list()
 
-    MFCC = scipy.fftpack.dct(bands_energies)
+    fft_frames[-1] = fill_incomplete_frame(fft_frames[-1], len(fft_frames[0]))
+    print(len(fft_frames[-1]))
+    before = fft_frames
+    new = list()
+    # filtered = 0
+    new_frames = list()
+    for frame in fft_frames:
+        filtered = 0
+        for el in filter_bank:
+            filtered += el * frame
+        new_frames.append(filtered)
+
+    # MFCC = new_frames
+    MFCC = scipy.fftpack.dct(new_frames)
     MFCC = MFCC[0:13]
+    # MFCC = list()
     # trigger_plots(filtered_audio, framed_audio)
     return MFCC
 
 
 MFCC = get_MFCC(audio)
+# print(MFCC.shape)
 
 appropriate_mfcc_shape = list()
 try:
