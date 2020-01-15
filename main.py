@@ -63,6 +63,13 @@ def frame_and_window_signal(signal, frame_time=0.02):
     return framed_signal_, fft_frames
 
 
+def hamming_coefficients(x):
+    hamming_coeffs = np.zeros(x)
+    for i in range(0, x):
+       hamming_coeffs[i] = 0.54 - 0.46*np.cos(2*np.pi*(i/(x-1)))
+    return hamming_coeffs
+
+
 def window_frames(frames):
     plt.figure(1)
     plt.title("example frame vs windowed example frame")
@@ -70,7 +77,7 @@ def window_frames(frames):
 
     for i in range(0, len(frames)):
         array1 = np.array(frames[i])
-        array2 = np.hamming(len(frames[i]))
+        array2 = hamming_coefficients(len(frames[i]))
         frames[i] = array1 * array2
 
     plt.plot(frames[30])
@@ -93,8 +100,6 @@ def showFFT(signal):
 
 def high_pass_filter(signal):
     b, a = sig.butter(1, 0.8, 'high', analog=True)
-    [W, h] = sig.freqz(b, a, worN=nftt)
-    W = sample_rate * W / 2 * np.pi
     filtered_signal = sig.lfilter(b, a, signal)
     return filtered_signal
 

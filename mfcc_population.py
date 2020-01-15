@@ -1,7 +1,7 @@
 from scipy.io import wavfile
 import glob
 import os
-from main import
+# from main import
 
 class WavFile:
     def __init__(self):
