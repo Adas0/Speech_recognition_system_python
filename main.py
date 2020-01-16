@@ -253,14 +253,29 @@ def get_MFCC(audio):
     # dokladnie sie zaczynaja i koncza te filtry)
     # ta macierz to bedzie już poprawne mfcc
 
-
-
-
+    dupa = matrix_sum(matrix)
 
     # MFCC = MFCC[0:13]
     MFCC = list()
     # trigger_plots(filtered_audio, framed_audio)
     return MFCC
+
+
+def matrix_sum(matrix):
+    new_matrix = np.zeros((263, 20))
+    indexes = [
+        [4, 9], [6, 12], [10, 16], [13, 19], [17, 24], [20, 28], [25, 34], [29, 39], [35, 45], [40, 52],
+        [46, 59], [53, 67], [60, 75], [68, 85], [76, 95], [86, 106], [96, 118], [107, 131], [119, 145], [132, 159]
+    ]
+
+    for k in range(0, 263):
+        for j in range(0, len(indexes)):
+            temp_indexes = indexes[j]
+            temp_sum = 0
+            for i in range(temp_indexes[0], temp_indexes[1]):
+                temp_sum += matrix[k, i]
+            new_matrix[k, j] = temp_sum
+    return new_matrix
 
 
 MFCC = get_MFCC(audio)
