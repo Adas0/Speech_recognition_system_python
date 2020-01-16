@@ -50,3 +50,12 @@ print(np.multiply(q,w))
 
 f = [1,2,3,4,5,3,5,3,5,3,4,3,4];
 print(np.sum(f[1:3]))
+
+
+file1 = open("MyFile.txt", "w+")
+for el in f:
+    file1.write(str(el))
+
+for el in w:
+    file1.write(str(el))
+

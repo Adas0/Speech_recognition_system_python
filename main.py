@@ -9,7 +9,12 @@ import glob
 import os
 from dtw import dtw
 
-sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
+
+sample_rate, audio_wiosna = wavfile.read("./wiosna-Adam-Korytowski.wav")
+sample_rate_, audio_lato = wavfile.read("./zima-Adam-Korytowski.wav")
+sample_rate__, audio_jesien = wavfile.read("./jesien-Adam-Korytowski.wav")
+# sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
+
 
 frame_time = 0.02
 nftt = frame_time * sample_rate
@@ -113,7 +118,7 @@ def trigger_plots(filtered_audio, framed_audio):
     plt.figure(1)
     plt.subplot(2, 1, 1)
     plt.title("unfiltered vs filtered signal")
-    plt.plot(audio)
+    plt.plot(audio_wiosna)
     plt.subplot(2, 1, 2)
     plt.plot(filtered_audio)
     plt.show()
@@ -155,7 +160,7 @@ def mel_to_freq(mel_freqs):
 def round_freqs(freqs):
     rounded_freqs = list()
     for el in freqs:
-        rounded_freqs.append(np.floor((nftt + 1)  * 2 *el/sample_rate))
+        rounded_freqs.append(np.floor((nftt + 1) * 2 * el / sample_rate))
 
     return rounded_freqs
 
@@ -228,10 +233,6 @@ def get_MFCC(audio):
     mel_filtered_fft = list()
 
     fft_frames[-1] = fill_incomplete_frame(fft_frames[-1], len(fft_frames[0]))
-    # print(len(fft_frames[-1]))
-    before = fft_frames
-    new = list()
-    # filtered = 0
     new_frames = list()
     for frame in fft_frames:
         filtered = 0
@@ -244,7 +245,7 @@ def get_MFCC(audio):
 
 
 
-    matrix = scipy.fftpack.dct(new_frames)
+    # matrix = scipy.fftpack.dct(new_frames)
     # to jest macierz (ramki x probki w tych ramkach). czyli jakieś 263x160. (260 ramek, każda po 160 próbek)
     # ma powstać: 263 x 20. Czyli z tego 160 trzeba zrobić 20. Jak? - Trzeba uśrednić wartości w pasmach melowych:
     # czyli: patrzysz gdzie się zaczyna i kończy pierwszy filtr : zaczyna się w indeksie 4, kończy w 8. więc bierzesz
@@ -253,22 +254,26 @@ def get_MFCC(audio):
     # dokladnie sie zaczynaja i koncza te filtry)
     # ta macierz to bedzie już poprawne mfcc
 
-    dupa = matrix_sum(matrix)
+    new_frames = np.matrix(new_frames)
+    MFCC = matrix_sum(new_frames)
+    MFCC = 20 * np.log10(MFCC)
 
-    # MFCC = MFCC[0:13]
-    MFCC = list()
+    MFCC = scipy.fftpack.dct(MFCC)
+
+    MFCC = np.transpose(MFCC)
+    MFCC = MFCC[0:13]
     # trigger_plots(filtered_audio, framed_audio)
     return MFCC
 
 
 def matrix_sum(matrix):
-    new_matrix = np.zeros((263, 20))
+    new_matrix = np.zeros((len(matrix), 20))
     indexes = [
         [4, 9], [6, 12], [10, 16], [13, 19], [17, 24], [20, 28], [25, 34], [29, 39], [35, 45], [40, 52],
         [46, 59], [53, 67], [60, 75], [68, 85], [76, 95], [86, 106], [96, 118], [107, 131], [119, 145], [132, 159]
     ]
 
-    for k in range(0, 263):
+    for k in range(0, len(matrix)):
         for j in range(0, len(indexes)):
             temp_indexes = indexes[j]
             temp_sum = 0
@@ -276,20 +281,6 @@ def matrix_sum(matrix):
                 temp_sum += matrix[k, i]
             new_matrix[k, j] = temp_sum
     return new_matrix
-
-
-MFCC = get_MFCC(audio)
-# print(MFCC.shape)
-
-appropriate_mfcc_shape = list()
-try:
-    appropriate_mfcc_shape = MFCC.shape
-except:
-    print("no shape")
-
-
-files_zima = list()
-os.chdir("./pory_roku_8k")
 
 
 def get_mfcc_pattern(word):
@@ -320,25 +311,47 @@ def get_mfcc_pattern(word):
     return avgerage_mfcc
 
 
-# wiosna = get_mfcc_pattern("wiosna")
-# lato = get_mfcc_pattern("lato")
-# jesien = get_mfcc_pattern("jesien")
-# zima = get_mfcc_pattern("zima")
-#
-# patterns = list()
-# patterns.append(wiosna)
-# patterns.append(lato)
-# patterns.append(jesien)
-# patterns.append(zima)
-# for el in patterns:
-#     if not el.shape == appropriate_mfcc_shape:
-#         print("wrong shapes")
-#
-#
-# distances = list()
-# for el in patterns:
-#     dist, cost, acc_cost, path = dtw(MFCC.T, el.T, dist=lambda x, y: norm(x - y, ord=1))
-#     distances.append(dist)
-#
-# print(distances)
+files_zima = list()
+os.chdir("./")
+
+def get_distances(word):
+
+    MFCC_tested_word = get_MFCC(audio_lato)
+    word_files = list()
+    # dcts = list()
+    for file in glob.glob(word + "*.wav"):
+        word_files.append(file)
+
+    print(word_files)
+    dist = list()
+    for el in word_files:
+        _sample_rate, _audio = wavfile.read(el)
+        dist_, cost, acc_cost, path = dtw(MFCC_tested_word.T, get_MFCC(_audio).T, dist=lambda x, y: norm(x - y, ord=1))
+        dist.append(dist_)
+
+    return dist
+
+
+
+words = ["wiosna", "lato", "jesień", "zima", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"]
+
+wiosna = list()
+os.chdir("./pory_roku_8k/")
+wiosna.append(get_distances("wiosna"))
+wiosna.append(get_distances("lato"))
+wiosna.append(get_distances("jesień"))
+wiosna.append(get_distances("zima"))
+
+os.chdir("..")
+os.chdir("./dni_tygodnia_8k/")
+wiosna.append(get_distances("poniedziałek"))
+wiosna.append(get_distances("wtorek"))
+wiosna.append(get_distances("środa"))
+wiosna.append(get_distances("czwartek"))
+wiosna.append(get_distances("piątek"))
+wiosna.append(get_distances("sobota"))
+wiosna.append(get_distances("niedziela"))
+
+
+print(wiosna)
 
