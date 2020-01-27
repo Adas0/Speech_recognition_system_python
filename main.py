@@ -13,6 +13,7 @@ from dtw import dtw
 sample_rate, audio_wiosna = wavfile.read("./wiosna-Adam-Korytowski.wav")
 sample_rate_, audio_lato = wavfile.read("./zima-Adam-Korytowski.wav")
 sample_rate__, audio_jesien = wavfile.read("./jesien-Adam-Korytowski.wav")
+sample_rateasd, audio = wavfile.read("./jeden_16bit.wav")
 # sample_rate, audio = wavfile.read("./zima-Adam-Korytowski.wav")
 
 
@@ -78,7 +79,7 @@ def hamming_coefficients(x):
 def window_frames(frames):
     plt.figure(1)
     plt.title("example frame vs windowed example frame")
-    plt.plot(frames[30])
+    plt.plot(frames[35])
 
     for i in range(0, len(frames)):
         array1 = np.array(frames[i])
@@ -86,7 +87,7 @@ def window_frames(frames):
         frames[i] = array1 * array2
 
     plt.plot(frames[30])
-    # plt.show()
+    plt.show()
     return frames
 
 
@@ -104,7 +105,7 @@ def showFFT(signal):
 
 
 def high_pass_filter(signal):
-    b, a = sig.butter(1, 0.8, 'high', analog=True)
+    b, a = sig.butter(1, 0.5, 'high', analog=True)
     filtered_signal = sig.lfilter(b, a, signal)
     return filtered_signal
 
@@ -115,7 +116,7 @@ def high_pass_filter(signal):
 
 
 def trigger_plots(filtered_audio, framed_audio):
-    plt.figure(1)
+    plt.figure(2)
     plt.subplot(2, 1, 1)
     plt.title("unfiltered vs filtered signal")
     plt.plot(audio_wiosna)
@@ -124,25 +125,26 @@ def trigger_plots(filtered_audio, framed_audio):
     plt.show()
 
     # FFT przed vs po filtracji
-    # plt.figure(2)
-    # plt.subplot(2, 1, 1)
-    # plt.title("FFT of unfiltered vs filtered signal")
-    # plt.plot(np.abs(getFFT(audio)))
-    # plt.subplot(2, 1, 2)
-    # plt.plot(np.abs(getFFT(filtered_audio)))
-    # plt.show()
+    plt.figure(3)
+    plt.subplot(2, 1, 1)
+    plt.title("FFT of unfiltered vs filtered signal")
+    FFT = fft.fft(audio[0:500])
+    FFT = FFT[:len(FFT) // 2]
+    plt.plot(FFT)
+    plt.subplot(2, 1, 2)
+    FFT_ = fft.fft(high_pass_filter(audio[0:500]))
+    FFT_ = FFT_[:len(FFT_) // 2]
+    plt.plot(FFT_)
+    plt.show()
 
     # sygnal po filtracji vs sygnal po filtracji zramkoway i zokienkowany
-    plt.figure(3)
+    plt.figure(4)
     plt.subplot(2, 1, 1)
     plt.title("before vs after framing and windowing ")
     plt.plot(filtered_audio)
     plt.subplot(2, 1, 2)
     plt.plot(framed_audio)
     plt.show()
-
-    plt.figure(4)
-    show_bank()
 
 
 # ta funkcja poprawnie przelicza, potwierdzone
@@ -213,6 +215,23 @@ def fill_incomplete_frame(frame, complete_frame_len):
     return np.array(frame)
 
 
+def matrix_sum(matrix):
+    new_matrix = np.zeros((len(matrix), 20))
+    indexes = [
+        [4, 9], [6, 12], [10, 16], [13, 19], [17, 24], [20, 28], [25, 34], [29, 39], [35, 45], [40, 52],
+        [46, 59], [53, 67], [60, 75], [68, 85], [76, 95], [86, 106], [96, 118], [107, 131], [119, 145], [132, 159]
+    ]
+
+    for k in range(0, len(matrix)):
+        for j in range(0, len(indexes)):
+            temp_indexes = indexes[j]
+            temp_sum = 0
+            for i in range(temp_indexes[0], temp_indexes[1]):
+                temp_sum += matrix[k, i]
+            new_matrix[k, j] = temp_sum
+    return new_matrix
+
+
 def get_MFCC(audio):
     audio = normalize_signal(audio)
     audio = np.mean(audio, axis=1)
@@ -262,25 +281,12 @@ def get_MFCC(audio):
 
     MFCC = np.transpose(MFCC)
     MFCC = MFCC[0:13]
-    # trigger_plots(filtered_audio, framed_audio)
+    trigger_plots(filtered_audio, framed_audio)
     return MFCC
 
 
-def matrix_sum(matrix):
-    new_matrix = np.zeros((len(matrix), 20))
-    indexes = [
-        [4, 9], [6, 12], [10, 16], [13, 19], [17, 24], [20, 28], [25, 34], [29, 39], [35, 45], [40, 52],
-        [46, 59], [53, 67], [60, 75], [68, 85], [76, 95], [86, 106], [96, 118], [107, 131], [119, 145], [132, 159]
-    ]
+mfcc = get_MFCC(audio)
 
-    for k in range(0, len(matrix)):
-        for j in range(0, len(indexes)):
-            temp_indexes = indexes[j]
-            temp_sum = 0
-            for i in range(temp_indexes[0], temp_indexes[1]):
-                temp_sum += matrix[k, i]
-            new_matrix[k, j] = temp_sum
-    return new_matrix
 
 
 def get_mfcc_pattern(word):
@@ -335,23 +341,23 @@ def get_distances(word):
 
 words = ["wiosna", "lato", "jesień", "zima", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"]
 
-wiosna = list()
-os.chdir("./pory_roku_8k/")
-wiosna.append(get_distances("wiosna"))
-wiosna.append(get_distances("lato"))
-wiosna.append(get_distances("jesień"))
-wiosna.append(get_distances("zima"))
-
-os.chdir("..")
-os.chdir("./dni_tygodnia_8k/")
-wiosna.append(get_distances("poniedziałek"))
-wiosna.append(get_distances("wtorek"))
-wiosna.append(get_distances("środa"))
-wiosna.append(get_distances("czwartek"))
-wiosna.append(get_distances("piątek"))
-wiosna.append(get_distances("sobota"))
-wiosna.append(get_distances("niedziela"))
-
-
-print(wiosna)
+# wiosna = list()
+# os.chdir("./pory_roku_8k/")
+# wiosna.append(get_distances("wiosna"))
+# wiosna.append(get_distances("lato"))
+# wiosna.append(get_distances("jesień"))
+# wiosna.append(get_distances("zima"))
+#
+# os.chdir("..")
+# os.chdir("./dni_tygodnia_8k/")
+# wiosna.append(get_distances("poniedziałek"))
+# wiosna.append(get_distances("wtorek"))
+# wiosna.append(get_distances("środa"))
+# wiosna.append(get_distances("czwartek"))
+# wiosna.append(get_distances("piątek"))
+# wiosna.append(get_distances("sobota"))
+# wiosna.append(get_distances("niedziela"))
+#
+#
+# print(wiosna)
 

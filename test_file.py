@@ -59,3 +59,31 @@ for el in f:
 for el in w:
     file1.write(str(el))
 
+from scipy.io import wavfile
+import matplotlib.pyplot as plt
+import scipy.fftpack as fft
+import numpy as np
+sample_rateasd, audio = wavfile.read("./jeden_16bit.wav")
+# freqs = np.fft.fftfreq(audio)
+# FFT = np.fft.
+
+from scipy import fftpack
+
+# X = fftpack.fft(audio, 160)
+# freqs = fftpack.fftfreq(len(audio)) * sample_rateasd
+
+# audio = np.mean(audio, axis=1)
+# audio = np.transpose(audio)
+from main import *
+ffta = np.fft.fft(audio)
+plt.figure(3)
+plt.subplot(2, 1, 1)
+plt.title("FFT of unfiltered vs filtered signal")
+FFT = fft.fft(audio)
+FFT = FFT[:len(FFT) // 2]
+plt.plot(FFT)
+plt.subplot(2, 1, 2)
+FFT_ = fft.fft(high_pass_filter(audio))
+FFT_ = FFT_[:len(FFT_) // 2]
+plt.plot(FFT_)
+plt.show()
