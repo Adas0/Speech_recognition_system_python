@@ -5,18 +5,17 @@
 # http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
 # https://python-speech-features.readthedocs.io/en/latest/
 
+#Date: 2018
+#Author: Adam Korytowski
+
 ##########################################################################################
 
 import main
 from main import audio, sample_rate
-# from python_speech_features import mfcc
 import python_speech_features
 import numpy
 import numpy as np
 from statistics import mean
-
-
-# print(audio.shape)
 
 # frame 20ms calculate
 frame_time = 0.02
@@ -53,9 +52,6 @@ log_or_not = True
 # okno
 window = numpy.hamming
 
-
-
-
 # mfcc calculation
 def getMFCCa():
     MFCC = python_speech_features.base.mfcc(audio, samplerate=16000, winlen=0.025, winstep=0.01,
@@ -63,77 +59,9 @@ def getMFCCa():
                                             ceplifter=22, appendEnergy=True, winfunc=numpy.hamming)
     return MFCC
 
-
 def function():
     pass
 
-
-  #297x13 to oznacza wiec mamy 297 ramek (160 ktore nachodza na siebie (25% długości nachodzenia)
-
-
-# def getDeltas():
-#     return python_speech_features.base.delta(MFCC, MFCC.shape[0])
-
-
 MFCC = getMFCCa()
-# print(MFCC)
 print("mfcc shape", MFCC.shape)
 print(MFCC[0])
-# Deltas = getDeltas()
-
-# print(Deltas.shape)
-# print('asd')
-
-
-#
-# a = [1, 2, 3, 5]
-# b = [3, 5, 6, 8]
-# c = [4, 5, 6, 4]
-# d = [1, 4, 7, 8]
-# e = a,b,c,d
-#
-# asd = list()
-# # asd.append(a,b)
-# # print(numpy.add(a, b))
-#
-# framed_signal = list()
-# print(e)
-# first_quater_index = int(0.25 * len(e[0]))
-# last_quater_index = int(0.75 * len(e[0]))
-# end = len(e[0])
-#
-# print(np.add(a,b))
-
-# for i in range(0, len(e)):
-#     #dla pierwszego elementu
-#     if not i+1 > len(e):
-#         if i == 0:
-#              framed_signal.append(e[i][0:last_quater_index])
-#
-#              first_part = int
-#              first_part = e[i][0: first_quater_index]
-#              last_part = int
-#              last_part = e[i][last_quater_index : end]
-#              print(np.mean(1, 5))
-#              print(first_part, last_part)
-#              print(np.average(first_part, last_part))
-#              # print(asd)
-#              framed_signal.append(np.average(e[i][last_quater_index : end], e[i+1][0: first_quater_index]))
-#         elif not i == len(e):
-#         # framed_signal.append(frames[i][first_quater_index:last_quater_index])
-#             framed_signal.append(np.average(e[i][last_quater_index: end], e[i + 1][0: first_quater_index]))
-#             framed_signal.append(e[i][last_quater_index:end])
-#         elif i == len(e):
-#             framed_signal.append(e[i][first_quater_index:end])
-#
-# print(framed_signal)
-
-
-# print(mean(1, 3))
-
-asd = "asd"
-print(asd + "qwe")
-
-
-asd = [1,2,3], [2,3,4]
-print(asd.shape)
